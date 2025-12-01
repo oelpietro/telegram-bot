@@ -6,7 +6,7 @@ import logging
 # Setup logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
-TOKEN = os.getenv("8026509446:AAGHVqs97h9RKr9SZFXKzBQhrCO485W4lqQ")
+TOKEN = os.getenv("TOKEN")
 if not TOKEN:
     logging.error("TOKEN não encontrado nas variáveis de ambiente. Pare o bot e defina TOKEN.")
     raise SystemExit("TOKEN não definido")
