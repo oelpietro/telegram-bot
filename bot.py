@@ -1,12 +1,39 @@
 import telebot
 import os
+import time
+import logging
 
-TOKEN = os.getenv("8026509446:AAFOQTquBugbB61GvysqSM_bEmluKco6Ixk")  # vamos colocar o token no Render
+# Setup logging
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+
+TOKEN = os.getenv("8026509446:AAGHVqs97h9RKr9SZFXKzBQhrCO485W4lqQ")
+if not TOKEN:
+    logging.error("TOKEN não encontrado nas variáveis de ambiente. Pare o bot e defina TOKEN.")
+    raise SystemExit("TOKEN não definido")
 
 bot = telebot.TeleBot(TOKEN)
 
 @bot.message_handler(commands=["start"])
 def start(msg):
-    bot.reply_to(msg, "👋 Olá! Seu bot está funcionando no Render!")
+    try:
+        bot.reply_to(msg, "🚀 Bot ativo! Envie /help para ver comandos.")
+        logging.info(f"/start recebido de {msg.from_user.username or msg.from_user.id}")
+    except Exception as e:
+        logging.exception("Erro ao responder /start")
 
-bot.polling(none_stop=True)
+@bot.message_handler(commands=["help"])
+def help_cmd(msg):
+    txt = "Comandos:\n/start - iniciar\n/help - ajuda"
+    bot.reply_to(msg, txt)
+
+def run():
+    while True:
+        try:
+            logging.info("Iniciando polling do bot...")
+            bot.polling(none_stop=True)
+        except Exception as e:
+            logging.exception("Polling caiu — reiniciando em 5s")
+            time.sleep(5)
+
+if __name__ == "__main__":
+    run()
